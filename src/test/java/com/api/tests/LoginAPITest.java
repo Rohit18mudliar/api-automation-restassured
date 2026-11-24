@@ -16,7 +16,6 @@ public class LoginAPITest {
         RequestSpecification y = x.header("Content-Type", " application/json");
         RequestSpecification z = y.body("{\"email\": \"student@example.com\",\"password\":\"secret123\"}");
         Response response = z.post("/api/auth/login");
-        System.out.println(response.asPrettyString());
         Assert.assertEquals(response.getStatusCode(), 200);
 
     }
@@ -24,7 +23,6 @@ public class LoginAPITest {
     public void loginTest2() {
         RestAssured.baseURI = "https://api.eventhub.rahulshettyacademy.com";
         Response response = RestAssured.given().header("Content-Type", " application/json").body("{\"email\": \"student@example.com\",\"password\":\"secret123\"}").post("/api/auth/login");
-        System.out.println(response.asPrettyString());
     }
 
 }

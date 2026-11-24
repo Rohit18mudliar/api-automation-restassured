@@ -40,12 +40,4 @@ public class LoginResponse {
         this.user = user;
     }
 
-    @Override
-    public String toString() {
-        return "LoginResponse{" +
-                "success=" + success +
-                ", token='" + token + '\'' +
-                ", user=" + user +
-                '}';
-    }
 }
