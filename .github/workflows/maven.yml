@@ -1,0 +1,52 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  schedule:
+    - cron: 30 20 * * * # UTC -> 2 AM IST
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      issues: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: Execute test
+      run: mvn clean test -Dsuite=testng
+      
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v7.0.2
+      with:        
+        name: Logs   # optional, default is artifact     
+        path: logs/   # A file, directory or wildcard pattern that describes what to upload.      
+        Available Options: warn  # The desired behavior if no files are found using the provided path. 
+        retention-days: 6
+        
+    - name: Publish report
+      if : always()
+      uses: dorny/test-reporter@v3.0.0
+      with:
+        name: TestNG reports
+        path: target/surefire-reports/junitreports/TEST-*.xml
+        reporter: jave-junit
+      
+      
+      
+    
+    
+    
+
