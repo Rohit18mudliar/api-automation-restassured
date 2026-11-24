@@ -42,7 +42,7 @@ jobs:
       with:
         name: TestNG reports
         path: target/surefire-reports/junitreports/TEST-*.xml
-        reporter: jave-junit
+        reporter: java-junit
       
       
       
