@@ -10,29 +10,13 @@ import com.api.models.response.GetEventResponse;
 import com.api.models.response.LoginResponse;
 import com.api.models.response.UpdateEventResponse;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import static io.restassured.RestAssured.baseURI;
-import static io.restassured.RestAssured.given;
-
 @Listeners(com.api.listeners.TestListener.class)
-public class loginapitest3 {
 
-    @Test(description = "Verify login API with valid credentials")
-    public void loginTest() {
-        LoginRequest loginRequest = new LoginRequest("student@example.com", "secret123");
-        AuthService authService = new AuthService();
-        Response response = authService.login(loginRequest);
-        LoginResponse loginResponse = response.as(LoginResponse.class); //Deserialise -Get the body and map it to a Java object
-        Assert.assertTrue(loginResponse.getSuccess());
-        Assert.assertTrue(loginResponse.getToken() != null);
-        Assert.assertNotNull(loginResponse.getToken());
-        Assert.assertEquals(loginResponse.getUser().getId(), 23);
-        Assert.assertEquals(loginResponse.getUser().getEmail(), "student@example.com");
-    }
+public class EventApiTests {
 
     @Test(description = "Verify createEvent API with valid credentials")
     public void createEventTest() {
@@ -57,7 +41,7 @@ public class loginapitest3 {
         Assert.assertEquals(response.getStatusCode(), 200);
         Assert.assertTrue(getEventResponse.getSuccess());
 
-        // Delete
+        // TearDown - Delete that event
         response = eventService.deleteEvent(loginResponse.getToken(), createEventResponse.getData().getId());
         Assert.assertEquals(response.getStatusCode(), 200);
 
@@ -87,5 +71,6 @@ public class loginapitest3 {
         Assert.assertEquals(updateEventResponse.getData().getTitle(), "QA Summit 2026");
 
     }
+
 
 }

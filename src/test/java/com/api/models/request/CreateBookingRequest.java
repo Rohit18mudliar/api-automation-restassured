@@ -7,6 +7,14 @@ public class CreateBookingRequest {
     private String customerEmail;
     private String customerName;
 
+    private CreateBookingRequest(Builder builder) {
+        this.eventId = builder.eventId;
+        this.customerPhone = builder.customerPhone;
+        this.quantity = builder.quantity;
+        this.customerEmail = builder.customerEmail;
+        this.customerName = builder.customerName;
+    }
+
     public void setEventId(int eventId) {
         this.eventId = eventId;
     }
@@ -57,5 +65,42 @@ public class CreateBookingRequest {
                         ",customerEmail = '" + customerEmail + '\'' +
                         ",customerName = '" + customerName + '\'' +
                         "}";
+    }
+
+    public static class Builder {
+        private int eventId;
+        private String customerPhone;
+        private int quantity;
+        private String customerEmail;
+        private String customerName;
+
+        public Builder EventId(int eventId) {
+            this.eventId = eventId;
+            return this;
+        }
+
+        public Builder CustomerPhone(String customerPhone) {
+            this.customerPhone = customerPhone;
+            return this;
+        }
+
+        public Builder Quantity(int quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder CustomerEmail(String customerEmail) {
+            this.customerEmail = customerEmail;
+            return this;
+        }
+
+        public Builder CustomerName(String customerName) {
+            this.customerName = customerName;
+            return this;
+        }
+
+        public CreateBookingRequest build() {
+            return new CreateBookingRequest(this);
+        }
     }
 }

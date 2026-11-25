@@ -13,7 +13,7 @@ public class CreateEventRequest {
     private String imageUrl;
 
 
-    public CreateEventRequest(Builder builder) {
+    private CreateEventRequest(Builder builder) {
         this.title = builder.title;
         this.description = builder.description;
         this.category = builder.category;

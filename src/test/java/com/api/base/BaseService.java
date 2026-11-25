@@ -20,6 +20,8 @@ import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.RequestSpecification;
 
+import java.util.Map;
+
 import static io.restassured.RestAssured.*;
 
 public class BaseService {
@@ -51,6 +53,10 @@ public class BaseService {
 
     protected Response getRequest(String endpoint) {
         return newSpec().get(endpoint);
+    }
+
+    protected Response getRequest(String endpoint, Map<String, ?> queryParams) {
+        return newSpec().contentType(ContentType.JSON).queryParams(queryParams).get(endpoint);
     }
 
     protected Response deleteRequest(String endpoint) {
