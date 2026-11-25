@@ -23,7 +23,7 @@ public class EventApiTests {
 
         // Login and get token
         AuthService authService = new AuthService();
-        Response response = authService.login(new LoginRequest("jivyqyg@mailinator.com", "Pa$$w0rd!"));
+        Response response = authService.login(new LoginRequest("apiuser01@mail.com", "Rahul@123"));
         LoginResponse loginResponse = response.as(LoginResponse.class);
 
         // Create Event using that token
@@ -52,7 +52,7 @@ public class EventApiTests {
 
         // Login and get token
         AuthService authService = new AuthService();
-        Response response = authService.login(new LoginRequest("jivyqyg@mailinator.com", "Pa$$w0rd!"));
+        Response response = authService.login(new LoginRequest("apiuser01@mail.com", "Rahul@123"));
         LoginResponse loginResponse = response.as(LoginResponse.class);
 
         // Create Event using that token

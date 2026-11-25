@@ -14,15 +14,14 @@ public class LoginApiTests {
 
     @Test(description = "Verify login API with valid credentials")
     public void loginTest() {
-        LoginRequest loginRequest = new LoginRequest("student@example.com", "secret123");
+        LoginRequest loginRequest = new LoginRequest("apiuser01@mail.com", "Rahul@123");
         AuthService authService = new AuthService();
         Response response = authService.login(loginRequest);
-        LoginResponse loginResponse = response.as(LoginResponse.class); //Deserialise -Get the body and map it to a Java object
+        Assert.assertEquals(response.getStatusCode(),200);
+        LoginResponse loginResponse = response.as(LoginResponse.class); //Deserialise
         Assert.assertTrue(loginResponse.getSuccess());
-        Assert.assertTrue(loginResponse.getToken() != null);
         Assert.assertNotNull(loginResponse.getToken());
-        Assert.assertEquals(loginResponse.getUser().getId(), 23);
-        Assert.assertEquals(loginResponse.getUser().getEmail(), "student@example.com");
+        Assert.assertEquals(loginResponse.getUser().getEmail(), "apiuser01@mail.com");
     }
 
 }
