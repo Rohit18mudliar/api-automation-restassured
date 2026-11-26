@@ -1,5 +1,4 @@
-name: Java CI with Maven
-
+name: API_Automation_RestAssured
 on:
   push:
     branches: [ "master" ]
