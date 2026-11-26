@@ -8,6 +8,8 @@ import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.FilterableResponseSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -25,6 +27,9 @@ public class LoggingFilter implements Filter {
     private static final Pattern JSON_SECRET = Pattern.compile(
             "(\"(?:password|token|accessToken|refreshToken|secret)\"\\s*:\\s*\")[^\"]*(\")",
             Pattern.CASE_INSENSITIVE);
+
+    // Converts request POJOs to JSON text so their body can be logged
+    private static final ObjectMapper MAPPER = JsonMapper.builder().build();
 
     private static String maskBody(String body) {
         return body == null ? "" : JSON_SECRET.matcher(body).replaceAll("$1****$2");
@@ -49,7 +54,11 @@ public class LoggingFilter implements Filter {
         if (body instanceof String) {
             logger.info("Body     : {}", maskBody((String) body));
         } else if (body != null) {
-            logger.info("Body     : <{}> (object body not printed)", body.getClass().getSimpleName());
+            try {
+                logger.info("Body     : {}", maskBody(MAPPER.writeValueAsString(body)));
+            } catch (Exception e) {
+                logger.info("Body     : <{}> (could not serialize)", body.getClass().getSimpleName());
+            }
         }
         logger.info("************************");
 

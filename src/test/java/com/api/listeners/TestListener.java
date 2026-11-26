@@ -2,6 +2,7 @@ package com.api.listeners;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
@@ -11,6 +12,14 @@ import java.util.Set;
 public class TestListener implements ITestListener {
 
     private static final Logger logger = LogManager.getLogger(TestListener.class);
+
+    // Key used in log4j2.xml as %X{test} to tag every log line with the running test
+    private static final String TEST_KEY = "test";
+
+    // e.g. "EventApiTests.createEventTest"
+    private static String testLabel(ITestResult result) {
+        return result.getTestClass().getRealClass().getSimpleName() + "." + result.getMethod().getMethodName();
+    }
 
     /**
      * Invoked before running all the test methods belonging to the classes inside the test
@@ -67,6 +76,7 @@ public class TestListener implements ITestListener {
      * @see ITestResult#STARTED
      */
     public void onTestStart(ITestResult result) {
+        ThreadContext.put(TEST_KEY, testLabel(result));   // all log lines from here carry this test name
         logger.info("*--------------*");
         logger.info("Test started - " + result.getMethod().getMethodName());
         logger.info("Description - " + result.getMethod().getDescription());
@@ -80,6 +90,7 @@ public class TestListener implements ITestListener {
      */
     public void onTestSuccess(ITestResult result) {
         logger.info("Passed !! " + result.getMethod().getMethodName());
+        ThreadContext.remove(TEST_KEY);
     }
 
     /**
@@ -90,6 +101,7 @@ public class TestListener implements ITestListener {
      */
     public void onTestFailure(ITestResult result) {
         logger.error("Failed !! " + result.getMethod().getMethodName());
+        ThreadContext.remove(TEST_KEY);
     }
 
     /**
@@ -99,7 +111,9 @@ public class TestListener implements ITestListener {
      * @see ITestResult#SKIP
      */
     public void onTestSkipped(ITestResult result) {
+        ThreadContext.put(TEST_KEY, testLabel(result));   // a skipped test may never have started
         logger.info("Skipped !! " + result.getMethod().getMethodName());
+        ThreadContext.remove(TEST_KEY);
     }
 
 }

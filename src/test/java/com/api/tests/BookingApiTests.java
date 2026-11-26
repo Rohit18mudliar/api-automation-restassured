@@ -5,7 +5,10 @@ import com.api.base.BookingService;
 import com.api.models.request.CreateBookingRequest;
 import com.api.models.request.LoginRequest;
 import com.api.models.response.*;
+import com.api.utils.FakerUtils;
 import io.restassured.response.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -18,25 +21,32 @@ import static io.restassured.RestAssured.given;
 
 @Listeners(com.api.listeners.TestListener.class)
 public class BookingApiTests {
-
+    private static final Logger logger = LogManager.getLogger(BookingApiTests.class);
 
     @Test(description = "Verify Create Booking And Search Booking List")
     public void CreateBookingAndSearchBookingListTest() {
         boolean isBookedEventPresent = false;
-        // Login and get token
+
+        logger.info("Step 1: Login and get token");
         AuthService authService = new AuthService();
         Response response = authService.login(new LoginRequest("apiuser01@mail.com", "Rahul@123"));
         LoginResponse loginResponse = response.as(LoginResponse.class);
 
-        // Create Booking using that token
-        CreateBookingRequest createBookingRequest = new CreateBookingRequest.Builder().CustomerEmail("test@tests.com").CustomerName("Test one").CustomerPhone("+91-9876543216").Quantity(1).EventId(285).build();
+        logger.info("Step 2: Create Booking");
+        CreateBookingRequest createBookingRequest = new CreateBookingRequest.Builder()
+                .CustomerEmail(FakerUtils.randomEmail())
+                .CustomerName(FakerUtils.randomName())
+                .CustomerPhone(FakerUtils.randomPhone())
+                .Quantity(1)
+                .EventId(285)
+                .build();
         BookingService bookingService = new BookingService();
         response = bookingService.createBooking(loginResponse.getToken(), createBookingRequest);
         CreateBookingResponse createBookingResponse = response.as(CreateBookingResponse.class);
         Assert.assertEquals(createBookingResponse.getMessage(), "Booking confirmed!");
         Assert.assertEquals(response.getStatusCode(), 201);
 
-        // Search newly created booking in the list
+        logger.info("Step 3: Search newly created booking in the list");
         Map<String, Object> queryParams = new LinkedHashMap<>();
         queryParams.put("eventId", createBookingResponse.getData().getEventId());
         queryParams.put("status", "confirmed");
@@ -58,6 +68,7 @@ public class BookingApiTests {
         }
 
         // TearDown - Delete that specific bookings
+        logger.info("Step 4: Delete booking");
         response = bookingService.deleteBooking(loginResponse.getToken(), createBookingResponse.getData().getId());
         Assert.assertEquals(response.getStatusCode(), 200);
         DeleteBookingResponse deleteBookingResponse = response.as(DeleteBookingResponse.class);
