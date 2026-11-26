@@ -1,4 +1,5 @@
 # API Automation Framework (REST Assured + TestNG)
+[![Java CI with Maven](https://github.com/Rohit18mudliar/api-automation-restassured/actions/workflows/maven.yml/badge.svg)](https://github.com/Rohit18mudliar/api-automation-restassured/actions/workflows/maven.yml)
 
 API test automation framework for the [EventHub practice API](https://api.eventhub.rahulshettyacademy.com), built with Java, REST Assured and TestNG. It follows a Service Object Model: tests never build HTTP requests directly, they call service classes that wrap REST Assured.
 
